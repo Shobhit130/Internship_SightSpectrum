@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+    <style>
+        *{
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+        }
+        body{
+            font-family: Verdana, Geneva, Tahoma, sans-serif;
+        }
+        .container{
+            width: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            padding: 10px;
+        }
+        fieldset{
+            padding: 20px;
+            border-radius: 10px;
+            border: none;
+            text-align: center;
+            background-color: tomato;
+            color: white;
+        }
+        .heading{
+            text-align: center;
+            margin: 10px;
+        }
+        input[type = "text"],
+        input[type = "tel"],
+        input[type = "email"],
+        input[type = "date"],
+        input[type = "submit"],
+        button{
+            padding: 5px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            display: inline-block;
+            width: 40%;
+        }
+        label{
+            display: inline-block;
+            width: 40%;
+            font-weight: bold;
+        }
+        button,input[type = "submit"]{
+            font-weight: bolder;
+            color: white;
+            background-color: cadetblue;
+            margin: 5px;
+            font-size: large;
+        }
+        button:hover,input[type = "submit"]:hover{
+            cursor: pointer;
+            background-color: teal;
+        }
+        .heading{
+            background-color: tomato;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="heading">
+            <h1>Sign Up</h1>
+        </div>
+        <form name = "signup" onsubmit="return fun()">
+            <fieldset>
+                <label for = "name">Name:</label>
+                <input type = "text" id = "name" autofocus name = "name">
+                <br>
+                <label for = "mobile">Mobile Number:</label>
+                <input type = "tel" id = "mobile" name = "mobile">
+                <br>
+                <label for = "email">Email:</label>
+                <input type = "email" id = "email" name = "email">
+                <br>
+                <label for = "dob">Date of Birth:</label>
+                <input type = "date" id = "dob" name = "dob">
+                <br>
+                <div class="sub">
+                    <!-- <button id = "calc" onclick="fun()">Submit</button> -->
+                    <input type="submit" value="Submit">
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <script>
+        function fun(){
+            //name validation
+            var username = document.getElementById("name").value;
+            if(username == ""){
+                alert("Enter your name");
+                document.signup.name.focus();
+                return false;
+            }
+            //mobile validation
+            var userphone = document.getElementById("mobile").value;
+            if(userphone == ""){
+                alert("Enter your mobile number");
+                document.signup.mobile.focus();
+                return false;
+            }
+            var userphonef = /^[0-9]{10}$/;
+            if(!userphone.match(userphonef)){
+                alert("Enter your mobile number correctly");
+                document.signup.mobile.focus();
+                return false;
+            }
+            //email validation
+            var useremail = document.getElementById("email").value;
+            if(useremail == ""){
+                alert("Enter your email");
+                document.signup.email.focus();
+                return false;
+            }
+
+            //age validation
+            var userinput = document.getElementById("dob").value;
+            if(userinput==null || userinput == ""){
+                alert("Enter a date");
+                document.signup.dob.focus();
+                return false;
+            }else{
+                var dob = new Date(userinput);
+                var today = new Date();
+                var diff = today.getTime() - dob.getTime();
+                var msInYear = 365*24*60*60*1000; //ms per year
+                var years = diff/msInYear;
+                if(years >= 18){
+                    alert("Success");
+                    return true;
+                }else{
+                    alert("Not allowed");
+                    return false;
+                }
+            }
+        }
+        </script>
+</body>
+</html>
