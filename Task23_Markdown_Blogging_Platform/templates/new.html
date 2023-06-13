@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New Post</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>New Post</h1>
+    <form action="/posts" method="post">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title"><br><br>
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50"></textarea><br><br>
+        <button type="submit">Create Post</button>
+    </form>
+</body>
+</html>

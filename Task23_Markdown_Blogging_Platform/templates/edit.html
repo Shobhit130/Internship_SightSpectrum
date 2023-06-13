@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Post</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+</head>
+<body>
+    <h1>Edit Post</h1>
+    <form action="/posts/{{ .ID }}" method="post">
+        <input type="hidden" name="_method" value="PUT">
+        <label for="content">Content:</label><br>
+        <textarea id="content" name="content" rows="10" cols="50">{{ .Content }}</textarea><br><br>
+        <button type="submit">Update Post</button>
+    </form>
+</body>
+</html>
