@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Monitoring Dashboard</title>
+    <!-- send a GET request to the server for the /static/style.css URL -->
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Monitoring Dashboard</h1>
+        <table id="statusTable">
+            <tr>
+                <th>URL</th>
+                <th>Status</th>
+                <th>Response Time (ms)</th>
+            </tr>
+        </table>
+    </div>
+    <script>
+        function updateStatus() {
+            // send an AJAX GET request to the "/status" endpoint of the server
+            //The server responds to this request with JSON data containing the URL statuses
+            //The data parameter in the callback function represents the JSON data returned by the server
+            $.get("/status", function (data) {
+                // remove all table rows except the first row in the HTML table
+                // it ensures that the table is cleared before populating it with the latest URL statuses
+                $("#statusTable tr:not(:first)").remove();
+                // iterate over the elements of the data array 
+                //status represents the current element in the iteration, which corresponds to a structure within the data array. 
+                $.each(data, function (index, status) {
+                    //create a new table row element 
+                    var row = $("<tr></tr>");
+                    //$("<td></td>") creates a new <td> element,<td></td> represents an empty table cell
+                    //.text(status.URL) sets the text content of the created <td> element to the value of status.URL
+                    //row.append(...) appends the created <td> element as a child to the row element
+                    row.append($("<td></td>").text(status.URL));
+                    row.append($("<td></td>").text(status.Status));
+                    row.append($("<td></td>").text(status.ResponseTime));
+                    if(status.Status == "Up"){
+                        $(row).addClass("status-up");
+                    }else{
+                        $(row).addClass("status-down");
+                    }
+                    $("#statusTable").append(row);
+                });
+            });
+        }
+        //call the updateStatus function every 5 seconds, ensuring that the table is regularly updated with the latest data
+        setInterval(updateStatus, 5000); // Update every 5 seconds
+        updateStatus();
+    </script>
+</body>
+</html>
