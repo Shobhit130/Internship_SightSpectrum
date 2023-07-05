@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Stock Market Monitoring</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .stock-data {
+        margin-bottom: 20px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        background-color: #f5f5f5;
+        text-align: left;
+      }
+
+      .stock-symbol {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+
+      .stock-details {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .stock-details li {
+        margin-bottom: 5px;
+      }
+
+      .input-container {
+        margin-bottom: 20px;
+      }
+
+      .input-container input[type="text"] {
+        padding: 5px;
+        font-size: 16px;
+        width: 200px;
+      }
+
+      .input-container button {
+        padding: 5px 10px;
+        font-size: 16px;
+        background-color: #4caf50;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+      }
+
+      .connection-status {
+        margin-top: 20px;
+        color: red;
+        position: relative;
+        z-index: 9999;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="input-container">
+        <input type="text" id="stock-symbol" placeholder="Enter stock symbol" />
+        <button onclick="connectWebSocket()">Connect</button>
+      </div>
+
+      <div id="stock-data"></div>
+      <canvas id="stock-chart" style="width: 100%; max-width: 700px"></canvas>
+      <div id="connection-status"></div>
+    </div>
+
+    <script>
+      const stockSymbolInput = document.getElementById("stock-symbol");
+      const stockDataDiv = document.getElementById("stock-data");
+      const connectionStatusDiv = document.getElementById("connection-status");
+      let socket;
+      let chartInstance;
+
+      function connectWebSocket() {
+        const stockSymbol = stockSymbolInput.value;
+        if (!stockSymbol) {
+          return;
+        }
+
+        socket = new WebSocket(`ws://${window.location.host}/ws`);
+
+        socket.onopen = () => {
+          socket.send(stockSymbol);
+        };
+
+        socket.onmessage = (event) => {
+          const stockData = JSON.parse(event.data);
+          updateStockData(stockData);
+        };
+
+        socket.onclose = (event) => {
+          if (event.code === 1006) {
+            updateConnectionStatus("Connection closed");
+          } else {
+            updateConnectionStatus("Failed to connect to WebSocket server");
+          }
+        };
+      }
+
+      function updateStockData(stockData) {
+        stockDataDiv.innerHTML = "";
+
+        const stockDataContainer = document.createElement("div");
+        stockDataContainer.className = "stock-data";
+
+        const stockSymbol = document.createElement("div");
+        stockSymbol.className = "stock-symbol";
+        stockSymbol.textContent = stockData["Global Quote"]["01. symbol"];
+
+        const stockDetailsList = document.createElement("ul");
+        stockDetailsList.className = "stock-details";
+
+        const stockOpen = document.createElement("li");
+        stockOpen.textContent = `Open: ${stockData["Global Quote"]["02. open"]}`;
+
+        const stockHigh = document.createElement("li");
+        stockHigh.textContent = `High: ${stockData["Global Quote"]["03. high"]}`;
+
+        const stockLow = document.createElement("li");
+        stockLow.textContent = `Low: ${stockData["Global Quote"]["04. low"]}`;
+
+        const stockClose = document.createElement("li");
+        stockClose.textContent = `Price: ${stockData["Global Quote"]["05. price"]}`;
+
+        const stockVolume = document.createElement("li");
+        stockVolume.textContent = `Volume: ${stockData["Global Quote"]["06. volume"]}`;
+
+        stockDetailsList.appendChild(stockOpen);
+        stockDetailsList.appendChild(stockHigh);
+        stockDetailsList.appendChild(stockLow);
+        stockDetailsList.appendChild(stockClose);
+        stockDetailsList.appendChild(stockVolume);
+
+        stockDataContainer.appendChild(stockSymbol);
+        stockDataContainer.appendChild(stockDetailsList);
+
+        stockDataDiv.appendChild(stockDataContainer);
+        createStockChart(stockData);
+      }
+      function createStockChart(stockData) {
+        const stockLabels = ["Open", "High", "Low", "Price"];
+        const stockValues = [
+          stockData["Global Quote"]["02. open"],
+          stockData["Global Quote"]["03. high"],
+          stockData["Global Quote"]["04. low"],
+          stockData["Global Quote"]["05. price"],
+        ];
+        var barColors = [
+          "rgba(255, 99, 132, 0.6)",
+          "rgba(54, 162, 235, 0.6)",
+          "rgba(255, 206, 86, 0.6)",
+          "rgba(75, 192, 192, 0.6)",
+        ];
+
+        if (chartInstance) {
+          // If chart instance exists, update the chart data and labels
+          chartInstance.data.labels = stockLabels;
+          chartInstance.data.datasets[0].data = stockValues;
+          chartInstance.options.title.text =
+            stockData["Global Quote"]["01. symbol"];
+          chartInstance.update(); // Update the existing chart
+        } else {
+          // If chart instance does not exist, create a new chart
+          chartInstance = new Chart("stock-chart", {
+            type: "bar",
+            data: {
+              labels: stockLabels,
+              datasets: [
+                {
+                  backgroundColor: barColors,
+                  data: stockValues,
+                },
+              ],
+            },
+            options: {
+              legend: { display: false },
+              title: {
+                display: true,
+                text: stockData["Global Quote"]["01. symbol"],
+              },
+            },
+          });
+        }
+      }
+      function updateConnectionStatus(message) {
+        connectionStatusDiv.textContent = message;
+        connectionStatusDiv.className = 'connection-status';
+      }
+    </script>
+  </body>
+</html>
