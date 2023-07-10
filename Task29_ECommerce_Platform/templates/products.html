@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Product Listing</title>
+    <link rel="stylesheet" href="/static/style_products.css">
+</head>
+<body>
+    <h2>Product Listing</h2>
+    <a href="/auth/products/create" class="create-button">Create Product</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Inventory</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .Products }}
+                <tr>
+                    <td>{{ .ID }}</td>
+                    <td>{{ .Name }}</td>
+                    <td>{{ .Description }}</td>
+                    <td>{{ .Price }}</td>
+                    <td>{{ .Inventory }}</td>
+                    <td>
+                        <button class="view-button"><a href="/auth/products/{{ .ID }}">View</a></button>
+                        <button class="edit-button"><a href="/auth/products/{{ .ID }}/edit">Edit</a></button>
+                        <form action="/auth/products/{{ .ID }}/delete" method="POST" style="display: inline;">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+    <button class="logout-button"><a href="/logout">Logout</a></button>
+</body>
+</html>

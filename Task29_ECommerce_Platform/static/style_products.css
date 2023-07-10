@@ -1,0 +1,97 @@
+/* CSS for the Product Listing page */
+
+/* Body styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f2f2f2;
+  }
+  
+  /* Heading styles */
+  h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Link styles */
+  a {
+    text-decoration: none;
+  }
+  /* Create product button styles */
+  .create-button {
+    display: block;
+    margin-bottom: 20px;
+  }
+  
+  /* Table styles */
+  table {
+    width: 80%;
+    border-collapse: collapse;
+    margin: 20px auto;
+  }
+  
+  th,
+  td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  
+  /* View, Edit, and Delete button styles */
+  .view-button,
+  .edit-button,
+  .delete-button,
+  .create-button {
+    display: inline-block;
+    padding: 10px 10px;
+    margin-right: 5px;
+    background-color: #333;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 6px;
+  }
+  a{
+    color: #fff;
+    font-weight: bold;
+    padding: 20px 15px;
+}
+.delete-button{
+      font-weight: bold;
+      padding: 10px 15px;
+    
+  }
+  .view-button:hover,
+  .edit-button:hover,
+  .delete-button:hover,
+  .create-button:hover {
+    background-color: #555;
+  }
+  
+  /* Logout button styles */
+  .logout-button {
+    display: block;
+    margin: 20px auto;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  .logout-button:hover {
+    background-color: #555;
+  }
+  .create{
+    color: #333;
+  text-decoration: none;
+  padding: 10px;
+  margin: 30px;
+  }
